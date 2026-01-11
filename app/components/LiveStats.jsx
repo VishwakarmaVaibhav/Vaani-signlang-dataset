@@ -8,23 +8,31 @@ export default function LiveStats() {
 
   useEffect(() => {
     async function fetchCount() {
-      const { count: total, error } = await supabase
-        .from("images") // Replace with your actual table name
-        .select('*', { count: 'exact', head: true });
-      
-      if (!error) setCount(total || 0);
+      try {
+        const { count: total, error } = await supabase
+          .from("gesture_images") // FIXED: Matches your SQL schema exactly
+          .select('*', { count: 'exact', head: true });
+        
+        if (error) throw error;
+        setCount(total || 0);
+      } catch (err) {
+        console.error("Count Fetch Error:", err.message);
+      }
     }
 
+    // CRITICAL: Call the function immediately on mount
     fetchCount();
 
-    // Optional: Real-time subscription to update count as people upload
+    // Setup Realtime listener
     const channel = supabase
-      .channel('schema-db-changes')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'images' }, 
+      .channel('db-changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gesture_images' }, 
       () => fetchCount())
       .subscribe();
 
-    return () => supabase.removeChannel(channel);
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (

@@ -1,18 +1,29 @@
+/* Default Light Theme */
 :root {
-    --bg: #ffffff;
-    --text: #111111;
-    --primary: #5b21b6;
-    --secondary: #4f46e5;
-    --card: #f8f8f8;
-    --border: #e5e7eb;
-  }
-  
-  [data-theme="dark"] {
-    --bg: #0f0f0f;
-    --text: #ffffff;
-    --primary: #8b5cf6;
-    --secondary: #6366f1;
-    --card: #1a1a1a;
-    --border: #333333;
-  }
-  
+  --bg: #ffffff;
+  --text: #111111;
+  --primary: #5b21b6;
+  --secondary: #4f46e5;
+  --card: #f8f8f8;
+  --border: #e5e7eb;
+}
+
+/* Default Dark Theme */
+[data-theme="dark"] {
+  --bg: #0f0f0f;
+  --text: #ffffff;
+  --primary: #8b5cf6;
+  --secondary: #6366f1;
+  --card: #1a1a1a;
+  --border: #333333;
+}
+
+/* 🌿 Extra Earthy Theme */
+[data-theme="earthy"] {
+  --bg: #F6F0D7;
+  --text: #111111;
+  --primary: #9CAB84;
+  --secondary: #C5D89D;
+  --card: #ffffff;
+  --border: #89986D;
+}

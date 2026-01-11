@@ -71,6 +71,7 @@ export default function WizardForm() {
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState("en");
   const [showExitModal, setShowExitModal] = useState(false);
+  
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -110,6 +111,8 @@ export default function WizardForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
+      
+      
   
       const out = await res.json();
       if (out.success) {
