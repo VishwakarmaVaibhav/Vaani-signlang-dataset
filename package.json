@@ -9,13 +9,19 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@mediapipe/selfie_segmentation": "^0.1.1675465747",
     "@supabase/supabase-js": "^2.90.1",
     "framer-motion": "^12.25.0",
     "gsap": "^3.14.2",
+    "jszip": "^3.10.1",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-webcam": "^7.2.0"
+    "react-virtualized-auto-sizer": "^2.0.2",
+    "react-webcam": "^7.2.0",
+    "react-window": "^2.2.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
