@@ -19,7 +19,7 @@ export default function Footer() {
   return (
     <footer className="w-full py-16 px-6 bg-[var(--bg)] border-t border-[var(--border)]  transition-colors">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2   justify-between">
           
           {/* 1. BRANDING & LEAD */}
           <div className="space-y-4 text-center md:text-left">
@@ -36,24 +36,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 2. PROJECT CONTRIBUTORS (THE STARTERS) */}
-          <div className="flex flex-col items-center space-y-4">
-             <h4 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em]">Project Starters</h4>
-             <div className="flex -space-x-3">
-                {/* Placeholder avatars for the team */}
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-[var(--bg)] bg-[var(--card)] shadow-md flex items-center justify-center overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-tr from-gray-200 to-gray-400 opacity-80" />
-                  </div>
-                ))}
-                <div className="w-10 h-10 rounded-full border-2 border-[var(--bg)] bg-blue-600 text-white flex items-center justify-center text-[10px] font-black shadow-md">
-                  +12
-                </div>
-             </div>
-             <p className="text-[10px] font-bold text-[var(--text)] opacity-40 uppercase tracking-widest">
-                The Community Movement
-             </p>
-          </div>
+         
 
           {/* 3. SOCIAL & LINKS */}
           <div className="flex flex-col items-center md:items-end space-y-6">

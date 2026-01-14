@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
+import BackgroundGraffiti from "./BackgroundGraffiti";
 
 const translations = {
   en: {
     joinResearch: "Join the Research",
     fillDetails: "Please fill in your details to get started.",
     fullName: "Full Name",
-    namePlaceholder: "e.g. Sunil Goswami",
+    namePlaceholder: "e.g. Vaibhav Vishwakarma",
     emailAddress: "Email Address",
     emailPlaceholder: "name@example.com",
     ageGroup: "Age Group",
@@ -29,7 +30,7 @@ const translations = {
     joinResearch: "अनुसंधान से जुड़ें",
     fillDetails: "शुरू करने के लिए कृपया अपनी जानकारी भरें।",
     fullName: "पूरा नाम",
-    namePlaceholder: "जैसे: सुनील गोस्वामी",
+    namePlaceholder: "जैसे: वैभव विश्वकर्मा",
     emailAddress: "ईमेल पता",
     emailPlaceholder: "name@example.com",
     ageGroup: "आयु वर्ग",
@@ -48,7 +49,7 @@ const translations = {
     joinResearch: "संशोधनात सहभागी व्हा",
     fillDetails: "सुरुवात करण्यासाठी कृपया आपली माहिती भरा.",
     fullName: "पूर्ण नाव",
-    namePlaceholder: "उदा. सुनील गोस्वामी",
+    namePlaceholder: "उदा. वैभव विश्वकर्मा",
     emailAddress: "ईमेल पत्ता",
     emailPlaceholder: "name@example.com",
     ageGroup: "वयोगट",
@@ -66,6 +67,8 @@ const translations = {
   
 };
 
+
+
 export default function WizardForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -80,30 +83,24 @@ export default function WizardForm() {
   });
 
   useEffect(() => {
-
-    
     setLang(localStorage.getItem("lang") || "en");
   }, []);
 
-  const t = translations[lang];
+  const t = translations[lang] || translations.en;
   const update = (field, value) => setData({ ...data, [field]: value });
 
-  // Handle Skip Email
   const handleSkipEmail = () => {
     update("email", "anonymous@research.io");
-  };
-  // Logic to prevent leaving if data is entered
-  const handleBackNavigation = () => {
-    if (data.name.length > 0 || data.email.length > 0) {
-      setShowExitModal(true);
-    } else {
-      router.push("/");
-    }
   };
 
   const submitUser = async () => {
     if (!data.consent) return alert("Please provide consent to continue.");
     
+    // Basic Email Validation before submitting
+    if (data.email !== "anonymous@research.io" && !data.email.includes("@")) {
+      return alert("Please enter a valid email address.");
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/submitUser", {
@@ -112,16 +109,11 @@ export default function WizardForm() {
         body: JSON.stringify(data)
       });
       
-      
-  
       const out = await res.json();
       if (out.success) {
         localStorage.setItem("USER_ID", out.user.id);
-        
-        // Save Cookie for middleware
         document.cookie = `USER_ID=${out.user.id}; path=/; max-age=86400; SameSite=Lax`;
-
-        router.push("/upload"); // This will now work
+        router.push("/upload");
       } else {
         alert("Submission failed. Please try again.");
       }
@@ -140,12 +132,13 @@ export default function WizardForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 pt-24 pb-12 bg-[var(--bg)]">
-      {/* LOADER */}
+
+      <BackgroundGraffiti />
+      
       <AnimatePresence>
         {loading && <Loader message={t.submitting} />}
       </AnimatePresence>
 
-      {/* EXIT GUARD MODAL */}
       <AnimatePresence>
         {showExitModal && (
           <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -168,6 +161,7 @@ export default function WizardForm() {
           </div>
         )}
       </AnimatePresence>
+
       <motion.div 
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -193,9 +187,9 @@ export default function WizardForm() {
             />
           </motion.div>
 
-          {/* EMAIL FIELD WITH SKIP */}
+          {/* EMAIL FIELD - Logic Changed here: data.name.length > 0 */}
           <AnimatePresence>
-            {data.name.length > 2 && (
+            {data.name.length > 0 && (
               <motion.div 
                 variants={fadeIn} 
                 initial="hidden" 
@@ -227,9 +221,9 @@ export default function WizardForm() {
             )}
           </AnimatePresence>
 
-          {/* AGE FIELD (Triggered by valid email OR skip value) */}
+          {/* AGE FIELD - Logic Changed here: data.email.length > 0 */}
           <AnimatePresence>
-            {(data.email.includes("@") && data.email.length > 5) && (
+            {data.email.length > 0 && (
               <motion.div 
                 variants={fadeIn} 
                 initial="hidden" 
@@ -254,7 +248,7 @@ export default function WizardForm() {
             )}
           </AnimatePresence>
 
-          {/* CONSENT */}
+          {/* CONSENT - Logic kept same (dependent on selection, not typing) */}
           <AnimatePresence>
             {data.age !== "" && (
               <motion.div 

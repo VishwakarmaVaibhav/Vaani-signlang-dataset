@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import CameraPopup from "./CameraPopup";
 import { useRouter, usePathname } from "next/navigation";
 import GiftSection from "./GiftSection";
+import BackgroundGraffiti from "./BackgroundGraffiti";
+
 
 const translations = {
   en: {
@@ -160,6 +162,8 @@ export default function UploadWizard() {
 
   return (
     <div className="h-[calc(100vh-100px)] pt-24 pb-4 px-6 bg-[var(--bg)] overflow-hidden relative">
+
+      <BackgroundGraffiti/>
       
       {/* RESTORED: EXIT CONFIRMATION OVERLAY */}
       <AnimatePresence>

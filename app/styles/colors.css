@@ -1,29 +1,51 @@
-/* Default Light Theme */
 :root {
+  /* Default Light (Clean & Professional) */
   --bg: #ffffff;
-  --text: #111111;
-  --primary: #5b21b6;
-  --secondary: #4f46e5;
-  --card: #f8f8f8;
-  --border: #e5e7eb;
+  --text: #050505;
+  --primary: #4F46E5;   /* Indigo */
+  --secondary: #ec4899; /* Pink */
+  --card: #f8fafc;      /* Slate-50 */
+  --border: #e2e8f0;    /* Slate-200 */
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
 }
 
-/* Default Dark Theme */
 [data-theme="dark"] {
-  --bg: #0f0f0f;
+  /* Deep Space Dark */
+  --bg: #0B0C10;
   --text: #ffffff;
-  --primary: #8b5cf6;
-  --secondary: #6366f1;
-  --card: #1a1a1a;
-  --border: #333333;
+  --primary: #66FCF1;   /* Neon Cyan */
+  --secondary: #45A29E; /* Teal */
+  --card: #1F2833;      /* Dark Gunmetal */
+  --border: #2D3748;
 }
 
-/* 🌿 Extra Earthy Theme */
 [data-theme="earthy"] {
-  --bg: #F6F0D7;
-  --text: #111111;
-  --primary: #9CAB84;
-  --secondary: #C5D89D;
+  /* Nature/Paper Feel */
+  --bg: #F4F1EA;        /* Cream Paper */
+  --text: #2C3E50;      /* Dark Slate */
+  --primary: #27ae60;   /* Emerald Green */
+  --secondary: #d35400; /* Pumpkin */
   --card: #ffffff;
-  --border: #89986D;
+  --border: #dcdde1;
+}
+
+[data-theme="cyber"] {
+  /* Cyberpunk Neon */
+  --bg: #09001f;        /* Deep Void */
+  --text: #fff0f5;
+  --primary: #f0f;      /* Magenta */
+  --secondary: #0ff;    /* Cyan */
+  --card: #1a0b2e;
+  --border: #4d0099;
+}
+
+[data-theme="sunset"] {
+  /* Warm/Retro */
+  --bg: #2d1b2e;        /* Deep Plum */
+  --text: #ffd1dc;      /* Pastel Pink */
+  --primary: #ff9f1c;   /* Bright Orange */
+  --secondary: #b0413e; /* Brick Red */
+  --card: #452442;
+  --border: #6d3b66;
 }

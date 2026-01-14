@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import SmoothScroll from "./components/SmoothScroll";
 
 // app/layout.js
 export const metadata = {
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
+        <SmoothScroll/>
         <Navbar />
         <main>{children}</main>
         <Footer />
