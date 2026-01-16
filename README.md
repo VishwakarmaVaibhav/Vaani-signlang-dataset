@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🗣️ VAANI - Indian Sign Language Dataset Collector
 
-## Getting Started
+![Project Status](https://img.shields.io/badge/Status-Active_Development-green)
+![Tech Stack](https://img.shields.io/badge/Stack-Next.js_|_Supabase_|_MediaPipe-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-First, run the development server:
+> **Bridging the gap between silence and sound.** > A community-driven initiative to build a large-scale, open-source Indian Sign Language (ISL) dataset for AI training.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
+
+## 📖 Table of Contents
+- [About the Project](#-about-the-project)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [How It Works](#-how-it-works)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Contributing](#-contributing)
+- [Contact](#-contact)
+
+---
+
+## 🚀 About the Project
+
+**VAANI** is a web application designed to crowdsource hand gestures and sign language data. The lack of diverse, high-quality datasets for **Indian Sign Language (ISL)** is a major barrier in developing accurate AI translation tools for the mute and deaf community.
+
+This platform allows users to record gestures via their webcam. We use **Google MediaPipe** to validate that hands are visible in the frame before recording, ensuring high-quality data collection.
+
+---
+
+## ✨ Key Features
+
+* **Real-time Hand Detection:** Integrated **MediaPipe Hands** to detect hand landmarks instantly. The "Record" button is only enabled when hands are detected in the frame.
+* **Multi-Language Support:** The UI is accessible in **English, Hindi, and Marathi** to encourage contributors from diverse regions in India.
+* **Secure Cloud Storage:** All video data is securely uploaded and stored using **Supabase Storage**.
+* **Admin Dashboard:** A dedicated panel for verifying, approving, or rejecting submitted videos.
+* **Bulk Export:** Approved datasets can be exported for training Machine Learning models.
+
+---
+
+## 🛠 Tech Stack
+
+| Component | Technology |
+| :--- | :--- |
+| **Frontend** | [Next.js 14](https://nextjs.org/) (React Framework) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
+| **Backend & Auth** | [Supabase](https://supabase.com/) (PostgreSQL) |
+| **AI/ML** | [MediaPipe Hands](https://developers.google.com/mediapipe) (Computer Vision) |
+| **Icons** | Lucide React |
+| **Deployment** | Vercel |
+
+---
+
+## 🧠 How It Works
+
+1.  **User Login:** Users authenticate (optional, depending on config) to track contributions.
+2.  **Select Word:** The user selects a word/phrase (e.g., "Hello", "Thank You") from the list.
+3.  **Hand Detection:** The webcam activates. MediaPipe scans for hand landmarks (21 points per hand).
+4.  **Recording:** Once hands are detected, the user records the gesture (3-5 seconds).
+5.  **Submission:** The video is uploaded to a Supabase Bucket, and metadata is stored in the database.
+
+---
+
+## 💻 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+* Node.js (v18 or higher)
+* npm or yarn
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone [https://github.com/VishwakarmaVaibhav/Vaani-signlang-dataset.git](https://github.com/VishwakarmaVaibhav/Vaani-signlang-dataset.git)
+    cd Vaani-signlang-dataset
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+3.  **Set up Environment Variables** (See section below)
+
+4.  **Run the development server**
+    ```bash
+    npm run dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Environment Variables
 
-## Learn More
+Create a `.env.local` file in the root directory and add your Supabase credentials:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
