@@ -26,6 +26,9 @@
 
 This platform allows users to record gestures via their webcam. We use **Google MediaPipe** to validate that hands are visible in the frame before recording, ensuring high-quality data collection.
 
+![Dashboard Screenshot](./public/screenshots/dashboard-preview.png)
+![Camera-pop-up](./public/screenshots/camera-popup.png)
+![MediaPipe Segmentation](./public/screenshots/mediapipe-hand-segmentation.png)
 ---
 
 ## ✨ Key Features
