@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 let globalHands = null;
 let initPromise = null;
 
-export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode, onModelReady }) {
+export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode, onModelReady, onHandDetected }) {
   const [modelLoaded, setModelLoaded] = useState(false);
   const isRunning = useRef(false);
   const processingRef = useRef(false);
@@ -41,6 +41,7 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
 
       // 6. Draw Hands (Cutout)
       if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        if (onHandDetected) onHandDetected(true);
         results.multiHandLandmarks.forEach((landmarks) => {
           const xs = landmarks.map((p) => p.x * canvas.width);
           const ys = landmarks.map((p) => p.y * canvas.height);
@@ -56,9 +57,11 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
           ctx.rect(minX, minY, maxX - minX, maxY - minY);
           ctx.clip();
           ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-          
+
           ctx.restore();
         });
+      } else {
+        if (onHandDetected) onHandDetected(false);
       }
 
       ctx.restore();
@@ -82,9 +85,9 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
         await initPromise;
         // After waiting, update listener for this component instance
         if (globalHands) {
-           setupResultsListener(globalHands, videoRef, canvasRef);
-           setModelLoaded(true);
-           onModelReady();
+          setupResultsListener(globalHands, videoRef, canvasRef);
+          setModelLoaded(true);
+          onModelReady();
         }
         return;
       }

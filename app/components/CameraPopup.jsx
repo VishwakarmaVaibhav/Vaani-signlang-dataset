@@ -14,7 +14,8 @@ const translations = {
     cameraError: "Camera access denied.",
     uploading: "Uploading...",
     makeThisSign: "Make this sign",
-    opacity: "Opacity"
+    opacity: "Opacity",
+    bringHand: "Bring your hand in front of the screen"
   },
   hi: {
     capturingLetter: "अक्षर कैप्चर करना",
@@ -25,7 +26,8 @@ const translations = {
     cameraError: "कैमरा एक्सेस अस्वीकार।",
     uploading: "अपलोड हो रहा है...",
     makeThisSign: "यह मुद्रा बनाएं",
-    opacity: "अपारदर्शिता"
+    opacity: "अपारदर्शिता",
+    bringHand: "अपना हाथ स्क्रीन के सामने लाएं"
   },
   mr: {
     capturingLetter: "अक्षर कॅप्चर",
@@ -36,7 +38,8 @@ const translations = {
     cameraError: "कॅमेरा प्रवेश नाकारला.",
     uploading: "अपलोड होत आहे...",
     makeThisSign: "ही खूण करा",
-    opacity: "पारदर्शकता"
+    opacity: "पारदर्शकता",
+    bringHand: "तुमचा हात स्क्रीनसमोर आणा"
   }
 };
 
@@ -48,7 +51,7 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
   const streamRef = useRef(null);
   const mountedRef = useRef(true);
   const cameraInitRef = useRef(0);
-  
+
   const [segmentationReady, setSegmentationReady] = useState(false);
   const [facingMode, setFacingMode] = useState("user");
   const [showGuide, setShowGuide] = useState(true); // Default to true so they see it first
@@ -59,12 +62,13 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
   const [referenceImage, setReferenceImage] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [cameraError, setCameraError] = useState(false);
+  const [handDetected, setHandDetected] = useState(false);
 
   useEffect(() => {
     mountedRef.current = true;
     setLang(localStorage.getItem("lang") || "en");
     setReferenceImage(`/gestures/${letter}.png`);
-    
+
     return () => {
       mountedRef.current = false;
     };
@@ -236,7 +240,7 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
         className="fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] flex items-center justify-center p-2 md:p-4"
       >
         <div className="w-full max-w-md bg-[#111] rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl border border-white/10 max-h-[90vh]">
-          
+
           {/* Header */}
           <div className="p-4 flex justify-between items-center text-white shrink-0 bg-black/20">
             <button onClick={() => { stopCamera(); onClose(); }} className="p-2 bg-white/10 rounded-full active:scale-90 transition-transform">
@@ -259,7 +263,7 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
           </div>
 
           {/* Viewport */}
-          <div className="relative aspect-[4/5] w-full bg-black overflow-hidden flex items-center justify-center group">
+          <div className="relative aspect-video w-full bg-black overflow-hidden flex items-center justify-center group">
             {cameraError ? (
               <div className="text-white text-center">
                 <p className="mb-4">{t.cameraError}</p>
@@ -283,6 +287,7 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
                   timer={timer}
                   facingMode={facingMode}
                   onModelReady={() => setSegmentationReady(true)}
+                  onHandDetected={setHandDetected}
                 />
 
                 {/* 3. Reference Guide Overlay */}
@@ -295,7 +300,7 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
                       className="absolute inset-0 z-20 flex flex-col items-center justify-between py-8 pointer-events-none"
                     >
                       {/* Top Instruction */}
-                      <motion.div 
+                      <motion.div
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         className="bg-black/60 backdrop-blur-md px-6 py-2 rounded-full border border-white/10"
@@ -339,10 +344,10 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
                     onClick={() => setShowGuide(!showGuide)}
                     className="absolute top-4 right-4 z-30 w-12 h-12 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 overflow-hidden active:scale-90 transition-all shadow-lg hover:border-white/50"
                   >
-                    <img 
-                      src={referenceImage} 
-                      alt="Toggle Guide" 
-                      className={`w-full h-full object-contain p-1 ${showGuide ? 'opacity-100 bg-white/10' : 'opacity-50'}`} 
+                    <img
+                      src={referenceImage}
+                      alt="Toggle Guide"
+                      className={`w-full h-full object-contain p-1 ${showGuide ? 'opacity-100 bg-white/10' : 'opacity-50'}`}
                     />
                     {!showGuide && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
@@ -365,6 +370,24 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
                       <span className="text-[150px] font-black text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                         {timer}
                       </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Hand Instruction (Only when camera ready and no hand detected) */}
+                <AnimatePresence>
+                  {isCameraReady && !handDetected && !capturedImage && timer === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute bottom-4 left-0 right-0 flex justify-center z-40 pointer-events-none"
+                    >
+                      <div className="bg-orange-600/90 backdrop-blur-md px-6 py-3 rounded-xl border border-white/20 shadow-lg">
+                        <p className="text-white font-black text-sm uppercase tracking-wider animate-pulse">
+                          {t.bringHand}
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -394,13 +417,12 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
                 <button
                   onClick={startCountdown}
                   disabled={!isCameraReady || timer > 0}
-                  className={`w-20 h-20 rounded-full border-[6px] transition-all relative flex items-center justify-center group ${
-                    timer > 0
-                      ? 'bg-red-500 border-red-400 animate-pulse scale-110'
-                      : isCameraReady
+                  className={`w-20 h-20 rounded-full border-[6px] transition-all relative flex items-center justify-center group ${timer > 0
+                    ? 'bg-red-500 border-red-400 animate-pulse scale-110'
+                    : isCameraReady
                       ? 'bg-white border-gray-300 hover:border-blue-400 hover:scale-105 active:scale-90 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
                       : 'bg-gray-700 border-gray-800 cursor-not-allowed opacity-50'
-                  }`}
+                    }`}
                 >
                   <div className={`w-16 h-16 rounded-full border-2 ${timer > 0 ? 'border-white/50' : 'border-black/10'}`} />
                 </button>
