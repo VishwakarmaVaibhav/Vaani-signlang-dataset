@@ -20,10 +20,29 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
       // 2. Strict Safety Checks
       if (!video || !canvas || video.videoWidth === 0) return;
 
-      // 3. Resize Canvas if needed
-      if (canvas.width !== video.videoWidth) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      // 3. Resize Canvas to 4:5 Ratio
+      const targetRatio = 4 / 5;
+      const videoRatio = video.videoWidth / video.videoHeight;
+
+      let renderW, renderH;
+
+      if (videoRatio > targetRatio) {
+        // Video is wider (e.g. Landscape 16:9), fix height, calculate width to match ratio
+        renderH = video.videoHeight;
+        renderW = renderH * targetRatio;
+      } else {
+        // Video is narrower (e.g. Portrait 9:16), fix width
+        renderW = video.videoWidth;
+        renderH = renderW / targetRatio;
+      }
+
+      // Round to avoid pixel snapping issues
+      renderW = Math.floor(renderW);
+      renderH = Math.floor(renderH);
+
+      if (canvas.width !== renderW || canvas.height !== renderH) {
+        canvas.width = renderW;
+        canvas.height = renderH;
       }
 
       const ctx = canvas.getContext("2d");
@@ -35,6 +54,13 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
         ctx.scale(-1, 1);
       }
 
+      // Calculate "object-cover" parameters to center the video
+      const scale = Math.max(canvas.width / video.videoWidth, canvas.height / video.videoHeight);
+      const scaledW = video.videoWidth * scale;
+      const scaledH = video.videoHeight * scale;
+      const offsetX = (canvas.width - scaledW) / 2;
+      const offsetY = (canvas.height - scaledH) / 2;
+
       // 5. Draw Green Screen Background
       ctx.fillStyle = "#00FF00";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -43,8 +69,9 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
       if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         if (onHandDetected) onHandDetected(true);
         results.multiHandLandmarks.forEach((landmarks) => {
-          const xs = landmarks.map((p) => p.x * canvas.width);
-          const ys = landmarks.map((p) => p.y * canvas.height);
+          // Map landmarks to the new transformed canvas coordinates
+          const xs = landmarks.map((p) => offsetX + (p.x * scaledW));
+          const ys = landmarks.map((p) => offsetY + (p.y * scaledH));
 
           const padding = 60;
           const minX = Math.max(0, Math.min(...xs) - padding);
@@ -56,7 +83,9 @@ export default function HandProcessor({ videoRef, canvasRef, isReady, facingMode
           ctx.beginPath();
           ctx.rect(minX, minY, maxX - minX, maxY - minY);
           ctx.clip();
-          ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+
+          // Draw the video frame using the calculated offsets/scale
+          ctx.drawImage(results.image, offsetX, offsetY, scaledW, scaledH);
 
           ctx.restore();
         });

@@ -240,7 +240,7 @@ export default function UploadWizard() {
   }
 
   return (
-    <div className="min-h-screen lg:h-screen pt-20 lg:pt-24 pb-24 lg:pb-6 px-4 lg:px-6 bg-[var(--bg)] overflow-y-auto lg:overflow-hidden relative flex flex-col">
+    <div className="min-h-screen pt-20 lg:pt-24 pb-24 px-4 lg:px-6 bg-[var(--bg)] relative flex flex-col">
 
       <BackgroundGraffiti />
 

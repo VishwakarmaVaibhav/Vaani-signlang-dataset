@@ -262,8 +262,8 @@ export default function CameraPopup({ letter, onClose, onCaptured }) {
             </button>
           </div>
 
-          {/* Viewport */}
-          <div className="relative aspect-video w-full bg-black overflow-hidden flex items-center justify-center group">
+          {/* Viewport - Changed from aspect-video to aspect-[4/5] */}
+          <div className="relative aspect-[4/5] w-full bg-black overflow-hidden flex items-center justify-center group">
             {cameraError ? (
               <div className="text-white text-center">
                 <p className="mb-4">{t.cameraError}</p>
